@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đạt Nano</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e); /* Nền tối giống ban đêm */
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        h1 {
+            color: #ffffff;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            z-index: 10;
+            position: relative;
+        }
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        #yesButton {
+            background-color: #28a745;
+            color: white;
+        }
+        #noButton {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* Hiệu ứng sao vàng */
+        .star {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: gold;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: float 3s ease-in-out infinite, rotateStar 5s linear infinite, fadeInOut 3s ease-out;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.2) translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        @keyframes rotateStar {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+            }
+            30% {
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Hiệu ứng sao băng */
+        .shooting-star {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+            border-radius: 50%;
+            box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.5);
+            animation: shootingStar 2s ease-out forwards, fadeInOut 2s ease-out;
+        }
+
+        @keyframes shootingStar {
+            0% {
+                transform: translateX(0) translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(300px) translateY(150px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Hiệu ứng mây đều hơn */
+        .cloud {
+            position: absolute;
+            top: 10%; /* Vị trí chung */
+            left: 0;
+            width: 160px;
+            height: 60px;
+            background: rgba(200, 200, 255, 0.8); /* Màu xám xanh nhạt hơn */
+            border-radius: 40%;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            animation: cloudMove 20s linear infinite;
+        }
+
+        .cloud:before,
+        .cloud:after {
+            content: '';
+            position: absolute;
+            background: inherit; /* Cùng màu với đám mây chính */
+            border-radius: 50%;
+        }
+
+        .cloud:before {
+            width: 80px;
+            height: 80px;
+            top: -30px;
+            left: 20px;
+        }
+
+        .cloud:after {
+            width: 100px;
+            height: 100px;
+            top: -40px;
+            right: 10px;
+        }
+
+        @keyframes cloudMove {
+            0% {
+                transform: translateX(-200px);
+            }
+            100% {
+                transform: translateX(100vw);
+            }
+        }
+
+        /* Tạo thêm nhiều đám mây */
+        .cloud:nth-child(2) {
+            top: 20%;
+            left: -100px;
+            animation-delay: 5s;
+            opacity: 0.9;
+        }
+
+        .cloud:nth-child(3) {
+            top: 35%;
+            left: -150px;
+            animation-delay: 8s;
+            opacity: 0.7;
+        }
+        
+        .cloud:nth-child(4) {
+            top: 35%;
+            left: -50px;
+            animation-delay: 8s;
+            opacity: 0.7;
+        }
+
+        /* Mặt trăng */
+        .moon {
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #f2f2f2 30%, #cccccc);
+            border-radius: 50%;
+            box-shadow: 0 0 20px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        #thankYouMessage {
+            display: none;
+            color: #A8DADC;
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chị có đồng ý cho em chơi game không!! 💕</h1>
+    <div class="button-container">
+        <button id="yesButton">Đồng ý</button>
+        <button id="noButton">Không</button>
+    </div>
+    <div id="thankYouMessage">Cảm ơn Chị yêu nhiều nha ,em chơi game tới sáng luôn kkk 💖</div>
+
+    <div class="moon"></div> <!-- Mặt trăng -->
+    <div class="cloud"></div> <!-- Mây -->
+    <div class="cloud"></div> <!-- Thêm nhiều mây -->
+    <div class="cloud"></div> 
+
+    <script>
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+        const thankYouMessage = document.getElementById('thankYouMessage');
+        
+        // Hàm tạo ngôi sao vàng
+        function createStar() {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.top = Math.random() * window.innerHeight + 'px';
+            star.style.left = Math.random() * window.innerWidth + 'px';
+            document.body.appendChild(star);
+
+            setTimeout(() => {
+                star.remove();
+            }, 3000);
+        }
+         
+         
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.classList.add('shooting-star');
+            shootingStar.style.top = Math.random() * window.innerHeight + 'px';
+            shootingStar.style.left = Math.random() * window.innerWidth + 'px';
+            document.body.appendChild(shootingStar);
+
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 2000);
+        }
+
+        setInterval(createStar, 200);
+        setInterval(createShootingStar, 200);
+
+        yesButton.addEventListener('click', () => {
+            yesButton.disabled = true;
+            thankYouMessage.style.display = 'block';
+        });
+
+        noButton.addEventListener('click', () => {
+            noButton.style.backgroundColor = '#FF4C4C';
+            noButton.style.transform = `translateX(${Math.random() * 200 - 100}px) translateY(${Math.random() * 200 - 100}px)`;
+        });
+        
+    </script>
+</body>
+</html>
